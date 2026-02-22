@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-cpp:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: sudo apt-get install -y cmake g++
+      - name: Build
+        run: mkdir build && cmake -S cpp -B build && cmake --build build
+
+  lint-python:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+      - name: Set up python
+        uses: actions/setup-python@v5 
+        with:
+          python-version: '3.13' 
+      - name: Install linter
+        run: pip install ruff
+      - name: Ruff check
+        run: ruff check python/
